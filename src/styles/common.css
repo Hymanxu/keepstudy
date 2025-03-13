@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Common Input Styles */
+  .input {
+    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400;
+    @apply focus:outline-none focus:ring-primary focus:border-primary sm:text-sm;
+  }
+
+  /* Button Styles */
+  .btn {
+    @apply py-2 px-4 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary/90 hover:text-white focus:ring-primary;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-500;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+  }
+
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply bg-white rounded-lg shadow overflow-hidden;
+  }
+
+  .card-header {
+    @apply px-4 py-3 border-b border-gray-200;
+  }
+
+  .card-body {
+    @apply p-4;
+  }
+
+  .card-footer {
+    @apply px-4 py-3 border-t border-gray-200;
+  }
+
+  /* Badge Styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-primary/10 text-primary;
+  }
+
+  .badge-secondary {
+    @apply bg-gray-100 text-gray-800;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+
+  .badge-danger {
+    @apply bg-red-100 text-red-800;
+  }
+
+  /* Transition Utilities */
+  .transition-standard {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Divider */
+  .divider {
+    @apply border-t border-gray-200 my-4;
+  }
+
+  /* Scrollbar styling */
+  .custom-scrollbar {
+    @apply overflow-auto;
+  }
+
+  /* Navigation Links */
+  .nav-link {
+    @apply text-gray-600 hover:text-primary font-medium transition-colors;
+  }
+
+  .nav-link-mobile {
+    @apply flex items-center text-gray-700 hover:text-primary font-medium py-2 transition-colors;
+  }
+
+  /* Text gradient for logo */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+  
+  /* Custom container and heading styles */
+  .custom-container {
+    @apply px-4 mx-auto max-w-[1100px];
+  }
+  
+  .heading-xl {
+    @apply text-3xl font-bold mb-4;
+  }
+  
+  .heading-lg {
+    @apply text-2xl font-semibold mb-3;
+  }
+  
+  .heading-md {
+    @apply text-xl font-semibold mb-2;
+  }
+  
+  .paragraph {
+    @apply text-gray-700 mb-4;
+  }
+  
+  .link-primary {
+    @apply text-primary hover:text-primary/80 underline;
+  }
+  
+  /* Navigation styles */
+  .navbar-white {
+    @apply bg-white;
+  }
+  
+  .navbar-shadow {
+    @apply shadow-md;
+  }
+  
+  /* Custom spacing helpers */
+  .space-x-custom-4 > * + * {
+    @apply ml-4;
+  }
+  
+  .space-x-custom-8 > * + * {
+    @apply ml-8;
+  }
+  
+  /* Custom responsive helpers */
+  .custom-md-flex {
+    @apply hidden md:flex;
+  }
+  
+  .custom-md-grid-cols-3 {
+    @apply grid-cols-1 md:grid-cols-3;
+  }
+  
+  /* Custom width/height classes */
+  .custom-w-10 {
+    @apply w-10;
+  }
+  
+  .custom-h-10 {
+    @apply h-10;
+  }
+  
+  .custom-w-12 {
+    @apply w-12;
+  }
+  
+  .custom-h-12 {
+    @apply h-12;
+  }
+  
+  /* Custom border radius */
+  .custom-rounded-lg {
+    @apply rounded-lg;
+  }
+  
+  .custom-rounded-xl {
+    @apply rounded-xl;
+  }
+}
+
