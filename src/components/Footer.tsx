@@ -14,13 +14,13 @@ const Footer: React.FC = () => {
               新一代AI辅助实践学习平台，让学习更高效、更有趣。
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white transition-colors">
+              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                 <FontAwesomeIcon icon={faGithub} size="lg" />
               </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors">
+              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                 <FontAwesomeIcon icon={faWeibo} size="lg" />
               </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors">
+              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                 <FontAwesomeIcon icon={faWeixin} size="lg" />
               </a>
             </div>
@@ -51,17 +51,17 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">支持</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                   文档中心
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                   常见问题
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                   联系我们
                 </a>
               </li>
@@ -72,17 +72,17 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">资源</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                   博客
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                   教程
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                   合作伙伴
                 </a>
               </li>
@@ -95,10 +95,10 @@ const Footer: React.FC = () => {
             {new Date().getFullYear()} KeepStudy. 保留所有权利。
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+            <a href="javascript:void(0)" className="text-gray-400 hover:text-white transition-colors">
               隐私政策
             </a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+            <a href="javascript:void(0)" className="text-gray-400 hover:text-white transition-colors">
               服务条款
             </a>
           </div>
