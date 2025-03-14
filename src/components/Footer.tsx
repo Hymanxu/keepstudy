@@ -14,15 +14,15 @@ const Footer: React.FC = () => {
               新一代AI辅助实践学习平台，让学习更高效、更有趣。
             </p>
             <div className="flex space-x-4">
-              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+              <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                 <FontAwesomeIcon icon={faGithub} size="lg" />
-              </a>
-              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+              </button>
+              <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                 <FontAwesomeIcon icon={faWeibo} size="lg" />
-              </a>
-              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+              </button>
+              <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                 <FontAwesomeIcon icon={faWeixin} size="lg" />
-              </a>
+              </button>
             </div>
           </div>
           
@@ -51,19 +51,19 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">支持</h4>
             <ul className="space-y-2">
               <li>
-                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+                <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                   文档中心
-                </a>
+                </button>
               </li>
               <li>
-                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+                <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                   常见问题
-                </a>
+                </button>
               </li>
               <li>
-                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+                <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                   联系我们
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -72,19 +72,19 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">资源</h4>
             <ul className="space-y-2">
               <li>
-                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+                <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                   博客
-                </a>
+                </button>
               </li>
               <li>
-                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+                <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                   教程
-                </a>
+                </button>
               </li>
               <li>
-                <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
+                <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
                   合作伙伴
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -95,12 +95,12 @@ const Footer: React.FC = () => {
             {new Date().getFullYear()} KeepStudy. 保留所有权利。
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="javascript:void(0)" className="text-gray-400 hover:text-white transition-colors">
+            <button className="text-gray-400 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
               隐私政策
-            </a>
-            <a href="javascript:void(0)" className="text-gray-400 hover:text-white transition-colors">
+            </button>
+            <button className="text-gray-400 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
               服务条款
-            </a>
+            </button>
           </div>
         </div>
       </div>
