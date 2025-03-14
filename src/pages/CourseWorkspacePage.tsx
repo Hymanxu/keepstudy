@@ -17,7 +17,11 @@ import {
   faChevronDown,
   faChevronUp,
   faPlay,
-  faChevronRight
+  faChevronRight,
+  faCompressAlt,
+  faExpandAlt,
+  faClock,
+  faSitemap
 } from '@fortawesome/free-solid-svg-icons';
 import WorkspaceSidebar from '../components/WorkspaceSidebar';
 
@@ -27,7 +31,8 @@ const CourseWorkspacePage: React.FC = () => {
   const [aiInput, setAiInput] = useState('');
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [activeAiTab, setActiveAiTab] = useState('chat'); // chat, flashcard, practice, discussion
-  const [activeVideoTab, setActiveVideoTab] = useState('chapters'); // chapters, subtitles
+  const [activeVideoTab, setActiveVideoTab] = useState('timeline'); // timeline, mindmap
+  const [videoCollapsed, setVideoCollapsed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -63,6 +68,11 @@ const CourseWorkspacePage: React.FC = () => {
   // 进入实战编码页面
   const navigateToPractice = () => {
     navigate(`/workspace/practice/${courseId}?openAI=true`);
+  };
+
+  // 切换视频展开/收起状态
+  const toggleVideoCollapse = () => {
+    setVideoCollapsed(!videoCollapsed);
   };
 
   return (
@@ -107,92 +117,154 @@ const CourseWorkspacePage: React.FC = () => {
           {/* 左侧视频和标签区域 */}
           <div className="w-3/5 flex flex-col border-r border-gray-200 overflow-hidden">
             {/* 视频播放区 */}
-            <div className="relative bg-black aspect-video">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <button className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                  <FontAwesomeIcon icon={faPlay} className="text-white text-2xl ml-1" />
-                </button>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-700">
-                <div className="h-full bg-red-500 w-[30%]"></div>
-              </div>
-              <div className="absolute bottom-4 left-4 text-white text-sm">
-                8:44 / 1:28:57
-              </div>
+            <div className={`bg-black relative ${videoCollapsed ? 'h-12' : 'aspect-video'} transition-all duration-300`}>
+              {!videoCollapsed ? (
+                <iframe 
+                  src="//player.bilibili.com/player.html?isOutside=true&aid=289532467&bvid=BV1if4y147hS&cid=330208219&p=1" 
+                  scrolling="no" 
+                  frameBorder="0" 
+                  allowFullScreen={true}
+                  className="w-full h-full"
+                ></iframe>
+              ) : (
+                <div className="absolute inset-0 flex items-center px-4">
+                  <div className="h-2 bg-gray-700 flex-grow rounded-full">
+                    <div className="h-full bg-red-500 w-[30%] rounded-full"></div>
+                  </div>
+                  <span className="text-white text-xs ml-2">8:44 / 1:28:57</span>
+                </div>
+              )}
             </div>
             
             {/* 视频下方标签页 */}
-            <div className="border-t border-gray-200 bg-white">
-              <div className="flex border-b border-gray-200">
+            <div className="border-t border-gray-200 bg-white flex-grow overflow-hidden flex flex-col">
+              <div className="flex border-b border-gray-200 justify-between">
+                <div className="flex">
+                  <button 
+                    className={`px-4 py-3 font-medium text-sm flex items-center ${activeVideoTab === 'timeline' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'}`}
+                    onClick={() => setActiveVideoTab('timeline')}
+                  >
+                    <FontAwesomeIcon icon={faClock} className="mr-2" />
+                    时间轴
+                  </button>
+                  <button 
+                    className={`px-4 py-3 font-medium text-sm flex items-center ${activeVideoTab === 'mindmap' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'}`}
+                    onClick={() => setActiveVideoTab('mindmap')}
+                  >
+                    <FontAwesomeIcon icon={faSitemap} className="mr-2" />
+                    思维导图
+                  </button>
+                </div>
                 <button 
-                  className={`px-4 py-3 font-medium text-sm ${activeVideoTab === 'chapters' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'}`}
-                  onClick={() => setActiveVideoTab('chapters')}
+                  className="px-4 py-3 text-gray-600 hover:text-gray-900"
+                  onClick={toggleVideoCollapse}
+                  title={videoCollapsed ? "展开视频" : "收起视频"}
                 >
-                  章节
-                </button>
-                <button 
-                  className={`px-4 py-3 font-medium text-sm ${activeVideoTab === 'subtitles' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'}`}
-                  onClick={() => setActiveVideoTab('subtitles')}
-                >
-                  字幕
+                  <FontAwesomeIcon icon={videoCollapsed ? faExpandAlt : faCompressAlt} />
                 </button>
               </div>
               
               {/* 标签内容 */}
-              <div className="overflow-y-auto h-[calc(100%-48px)]">
-                {activeVideoTab === 'chapters' ? (
+              <div className="overflow-y-auto flex-grow">
+                {activeVideoTab === 'timeline' ? (
                   <div className="p-2">
-                    <div className="mb-2">
-                      <div className="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer">
-                        <FontAwesomeIcon icon={faFolder} className="text-gray-500 mr-2" />
-                        <span className="text-sm">第一章：基础入门</span>
-                        <FontAwesomeIcon icon={faChevronDown} className="text-gray-500 ml-auto" />
-                      </div>
-                      <div className="ml-4 mt-1">
-                        <div className="flex items-center p-2 rounded bg-blue-50 text-blue-700 cursor-pointer">
-                          <FontAwesomeIcon icon={faFileAlt} className="mr-2" />
-                          <span className="text-sm">1.1 开发环境搭建</span>
-                        </div>
-                        <div className="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer">
-                          <FontAwesomeIcon icon={faFileAlt} className="text-gray-500 mr-2" />
-                          <span className="text-sm">1.2 基本语法</span>
-                        </div>
-                      </div>
+                    <div className="my-2 border-l-2 border-blue-500 pl-3 py-2 hover:bg-blue-50 cursor-pointer">
+                      <div className="text-sm font-medium">00:00 - 05:32</div>
+                      <div className="text-xs text-gray-700 mt-1">课程介绍与学习目标</div>
                     </div>
-                    
-                    <div className="mb-2">
-                      <div className="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer">
-                        <FontAwesomeIcon icon={faFolder} className="text-gray-500 mr-2" />
-                        <span className="text-sm">第二章：面向对象编程</span>
-                        <FontAwesomeIcon icon={faChevronRight} className="text-gray-500 ml-auto" />
-                      </div>
+                    <div className="my-2 border-l-2 border-gray-300 pl-3 py-2 hover:bg-blue-50 cursor-pointer">
+                      <div className="text-sm font-medium">05:33 - 15:47</div>
+                      <div className="text-xs text-gray-700 mt-1">开发环境要求与系统配置</div>
                     </div>
-                    
-                    <div className="mb-2">
-                      <div className="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer">
-                        <FontAwesomeIcon icon={faFolder} className="text-gray-500 mr-2" />
-                        <span className="text-sm">第三章：高级特性</span>
-                        <FontAwesomeIcon icon={faChevronRight} className="text-gray-500 ml-auto" />
-                      </div>
+                    <div className="my-2 border-l-2 border-gray-300 pl-3 py-2 hover:bg-blue-50 cursor-pointer">
+                      <div className="text-sm font-medium">15:48 - 28:20</div>
+                      <div className="text-xs text-gray-700 mt-1">JDK下载与安装步骤</div>
+                    </div>
+                    <div className="my-2 border-l-2 border-gray-300 pl-3 py-2 hover:bg-blue-50 cursor-pointer">
+                      <div className="text-sm font-medium">28:21 - 42:15</div>
+                      <div className="text-xs text-gray-700 mt-1">环境变量配置详解</div>
+                    </div>
+                    <div className="my-2 border-l-2 border-gray-300 pl-3 py-2 hover:bg-blue-50 cursor-pointer">
+                      <div className="text-sm font-medium">42:16 - 58:45</div>
+                      <div className="text-xs text-gray-700 mt-1">开发工具安装与配置</div>
+                    </div>
+                    <div className="my-2 border-l-2 border-gray-300 pl-3 py-2 hover:bg-blue-50 cursor-pointer">
+                      <div className="text-sm font-medium">58:46 - 1:10:30</div>
+                      <div className="text-xs text-gray-700 mt-1">第一个项目创建与运行</div>
+                    </div>
+                    <div className="my-2 border-l-2 border-gray-300 pl-3 py-2 hover:bg-blue-50 cursor-pointer">
+                      <div className="text-sm font-medium">1:10:31 - 1:28:57</div>
+                      <div className="text-xs text-gray-700 mt-1">常见问题解答与课程总结</div>
                     </div>
                   </div>
                 ) : (
                   <div className="p-4">
-                    <div className="mb-4 border-l-2 border-blue-500 pl-2">
-                      <div className="text-xs text-gray-500 mb-1">00:01:23</div>
-                      <div className="text-sm">欢迎来到第一章的开发环境搭建课程</div>
-                    </div>
-                    <div className="mb-4 pl-2">
-                      <div className="text-xs text-gray-500 mb-1">00:02:15</div>
-                      <div className="text-sm">在开始编程之前，我们需要准备好工作环境</div>
-                    </div>
-                    <div className="mb-4 pl-2">
-                      <div className="text-xs text-gray-500 mb-1">00:03:42</div>
-                      <div className="text-sm">首先，我们需要下载并安装JDK</div>
-                    </div>
-                    <div className="mb-4 pl-2">
-                      <div className="text-xs text-gray-500 mb-1">00:05:30</div>
-                      <div className="text-sm">接下来，我们需要配置环境变量</div>
+                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                      <div className="p-4">
+                        <div className="flex justify-center mb-4">
+                          <div className="px-4 py-2 bg-blue-100 rounded-lg text-blue-800 font-medium border border-blue-200">
+                            开发环境搭建
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-wrap justify-center gap-4 mt-6">
+                          <div className="flex flex-col items-center">
+                            <div className="w-32 px-2 py-1 bg-green-100 rounded-lg text-green-800 text-sm text-center border border-green-200">
+                              JDK安装
+                            </div>
+                            <div className="h-8 border-l border-dashed border-gray-400 my-1"></div>
+                            <div className="flex gap-2">
+                              <div className="w-24 px-2 py-1 bg-gray-100 rounded-lg text-gray-800 text-xs text-center border border-gray-200">
+                                下载
+                              </div>
+                              <div className="w-24 px-2 py-1 bg-gray-100 rounded-lg text-gray-800 text-xs text-center border border-gray-200">
+                                安装
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-col items-center">
+                            <div className="w-32 px-2 py-1 bg-yellow-100 rounded-lg text-yellow-800 text-sm text-center border border-yellow-200">
+                              环境变量
+                            </div>
+                            <div className="h-8 border-l border-dashed border-gray-400 my-1"></div>
+                            <div className="flex gap-2">
+                              <div className="w-24 px-2 py-1 bg-gray-100 rounded-lg text-gray-800 text-xs text-center border border-gray-200">
+                                JAVA_HOME
+                              </div>
+                              <div className="w-24 px-2 py-1 bg-gray-100 rounded-lg text-gray-800 text-xs text-center border border-gray-200">
+                                PATH
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-col items-center">
+                            <div className="w-32 px-2 py-1 bg-purple-100 rounded-lg text-purple-800 text-sm text-center border border-purple-200">
+                              IDE配置
+                            </div>
+                            <div className="h-8 border-l border-dashed border-gray-400 my-1"></div>
+                            <div className="flex gap-2">
+                              <div className="w-24 px-2 py-1 bg-gray-100 rounded-lg text-gray-800 text-xs text-center border border-gray-200">
+                                安装
+                              </div>
+                              <div className="w-24 px-2 py-1 bg-gray-100 rounded-lg text-gray-800 text-xs text-center border border-gray-200">
+                                插件
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-6 pt-4 border-t border-gray-200">
+                          <div className="flex justify-center gap-4">
+                            <div className="w-40 px-3 py-2 bg-red-100 rounded-lg text-red-800 text-sm text-center border border-red-200">
+                              HelloWorld示例
+                            </div>
+                            <div className="w-40 px-3 py-2 bg-indigo-100 rounded-lg text-indigo-800 text-sm text-center border border-indigo-200">
+                              常见问题解决
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}

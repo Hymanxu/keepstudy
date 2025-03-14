@@ -5,7 +5,8 @@ import {
   faHashtag, faBell, faPlusCircle, faSearch, faStar, faUserCircle, 
   faVideo, faPhoneAlt, faEllipsisV, faPaperPlane, faMicrophone, 
   faSmile, faPaperclip, faUsers, faQuestionCircle, faCode, faRobot, faThumbtack,
-  faArrowLeft
+  faArrowLeft,
+  faBackspace
 } from '@fortawesome/free-solid-svg-icons';
 
 // Mock data for channels
