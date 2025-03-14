@@ -1,8 +1,3 @@
-[build]
-  # 使用仓库根目录作为基础目录
-  command = "npm run build"  # React项目标准构建命令
-  publish = "build"  # React项目的标准输出目录，如果您使用vite可能是"dist"
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
