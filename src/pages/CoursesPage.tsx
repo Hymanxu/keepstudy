@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faFilter, faStar, faUserFriends, faClock, faTag } from '@fortawesome/free-solid-svg-icons';
 
@@ -97,6 +98,7 @@ const CoursesPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [selectedLevel, setSelectedLevel] = useState('全部');
   const [showFilters, setShowFilters] = useState(false);
+  const navigate = useNavigate();
 
   // Filter courses based on search query, category, and level
   const filteredCourses = COURSES.filter(course => {
@@ -109,6 +111,11 @@ const CoursesPage: React.FC = () => {
     
     return matchesSearch && matchesCategory && matchesLevel;
   });
+
+  // 处理课程卡片点击
+  const handleCourseClick = (courseId: number) => {
+    navigate(`/courses/${courseId}`);
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen pt-[72px]">
@@ -204,7 +211,11 @@ const CoursesPage: React.FC = () => {
         {/* Course Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCourses.map(course => (
-            <div key={course.id} className="card hover:shadow-lg transition-shadow">
+            <div 
+              key={course.id} 
+              className="card hover:shadow-lg transition-shadow cursor-pointer" 
+              onClick={() => handleCourseClick(course.id)}
+            >
               <div className="relative h-48 overflow-hidden rounded-t-xl">
                 <img 
                   src={course.image} 
@@ -245,7 +256,15 @@ const CoursesPage: React.FC = () => {
                     <FontAwesomeIcon icon={faUserFriends} className="mr-1" />
                     {course.students} 名学生
                   </span>
-                  <button className="btn btn-primary text-sm">查看详情</button>
+                  <button 
+                    className="btn btn-primary text-sm"
+                    onClick={(e) => {
+                      e.stopPropagation(); // 防止触发卡片的点击事件
+                      handleCourseClick(course.id);
+                    }}
+                  >
+                    查看详情
+                  </button>
                 </div>
               </div>
             </div>

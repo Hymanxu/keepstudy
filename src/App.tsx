@@ -5,6 +5,7 @@ import './App.css';
 // Pages
 import HomePage from './pages/HomePage';
 import CoursesPage from './pages/CoursesPage';
+import CourseDetailPage from './pages/CourseDetailPage';
 import CommunityPage from './pages/CommunityPage';
 import WorkspaceRouter from './pages/WorkspaceRouter';
 import LoginPage from './pages/LoginPage';
@@ -35,6 +36,7 @@ const AppLayout = ({ isLoggedIn, handleLogin, handleLogout }: AppLayoutProps) =>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/courses/:courseId" element={<CourseDetailPage />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/workspace/*" element={<WorkspaceRouter />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
