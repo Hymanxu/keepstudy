@@ -24,6 +24,14 @@ import {
   faSitemap
 } from '@fortawesome/free-solid-svg-icons';
 import WorkspaceSidebar from '../components/WorkspaceSidebar';
+import '../styles/FlashCard.css';
+
+// 闪记卡数据类型定义
+interface FlashCard {
+  id: number;
+  question: string;
+  answer: string;
+}
 
 const CourseWorkspacePage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -33,6 +41,38 @@ const CourseWorkspacePage: React.FC = () => {
   const [activeAiTab, setActiveAiTab] = useState('chat'); // chat, flashcard, practice, discussion
   const [activeVideoTab, setActiveVideoTab] = useState('timeline'); // timeline, mindmap
   const [videoCollapsed, setVideoCollapsed] = useState(false);
+  
+  // 闪记卡状态
+  const [flashcards] = useState<FlashCard[]>([
+    { 
+      id: 1, 
+      question: "JDK的完整名称是什么？", 
+      answer: "Java Development Kit（Java开发工具包）" 
+    },
+    { 
+      id: 2, 
+      question: "配置Java环境变量的主要目的是什么？", 
+      answer: "使Java命令可以在任何目录下执行，不受当前工作目录限制。" 
+    },
+    { 
+      id: 3, 
+      question: "什么是PATH环境变量？", 
+      answer: "PATH是操作系统用来查找可执行程序的目录列表，将Java的bin目录添加到PATH中可以使Java命令全局可用。" 
+    },
+    { 
+      id: 4, 
+      question: "JDK、JRE和JVM的区别是什么？", 
+      answer: "JDK包含开发工具和JRE；JRE包含运行Java程序所需的库和JVM；JVM是Java虚拟机，用于执行Java字节码。" 
+    },
+    { 
+      id: 5, 
+      question: "如何检查Java是否正确安装？", 
+      answer: "在命令行/终端输入'java -version'命令，如果显示版本信息则表示安装成功。" 
+    }
+  ]);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -73,6 +113,33 @@ const CourseWorkspacePage: React.FC = () => {
   // 切换视频展开/收起状态
   const toggleVideoCollapse = () => {
     setVideoCollapsed(!videoCollapsed);
+  };
+  
+  // 翻转闪记卡
+  const flipCard = () => {
+    console.log("翻转前状态:", isFlipped);
+    setIsFlipped(!isFlipped);
+    console.log("翻转后状态:", !isFlipped);
+  };
+  
+  // 显示下一张卡片
+  const nextCard = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentCardIndex < flashcards.length - 1) {
+      setCurrentCardIndex(currentCardIndex + 1);
+      // 无论当前是否在答案状态，都直接展示新卡片的问题面
+      setIsFlipped(false);
+    }
+  };
+  
+  // 显示上一张卡片
+  const prevCard = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentCardIndex > 0) {
+      setCurrentCardIndex(currentCardIndex - 1);
+      // 无论当前是否在答案状态，都直接展示新卡片的问题面
+      setIsFlipped(false);
+    }
   };
 
   return (
@@ -366,26 +433,69 @@ const CourseWorkspacePage: React.FC = () => {
             {/* 闪记卡区域 */}
             {activeAiTab === 'flashcard' && (
               <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
-                <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-                  <h3 className="font-medium mb-2">课程闪记卡</h3>
-                  <p className="text-sm text-gray-600 mb-3">点击卡片查看答案</p>
+                <h3 className="font-medium mb-2">课程闪记卡</h3>
+                <p className="text-sm text-gray-600 mb-3">点击卡片查看答案，使用左右箭头切换卡片</p>
+                
+                <div className="flex justify-center items-center mb-4">
+                  <span className="text-sm text-gray-500">
+                    {currentCardIndex + 1} / {flashcards.length}
+                  </span>
+                </div>
+                
+                <div className="relative flex justify-center items-center">
+                  <button 
+                    onClick={prevCard}
+                    disabled={currentCardIndex === 0}
+                    className={`absolute left-0 z-10 p-2 rounded-full ${currentCardIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
+                  >
+                    <FontAwesomeIcon icon={faArrowLeft} />
+                  </button>
                   
-                  <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg mb-3 cursor-pointer">
-                    <div className="font-medium mb-1">问题：</div>
-                    <div className="text-sm">JDK的完整名称是什么？</div>
-                    <div className="mt-3 pt-3 border-t border-blue-100 hidden">
-                      <div className="font-medium mb-1">答案：</div>
-                      <div className="text-sm">Java Development Kit（Java开发工具包）</div>
+                  {/* 卡片容器 */}
+                  <div className="flashcard-container" key={currentCardIndex}>
+                    <div 
+                      className={`flashcard ${isFlipped ? 'flipped' : ''}`}
+                      onClick={flipCard}
+                    >
+                      {/* 卡片正面 - 问题 */}
+                      <div className="flashcard-face flashcard-front">
+                        <div className="font-medium mb-2 text-center">问题：</div>
+                        <div className="text-center text-lg">{flashcards[currentCardIndex].question}</div>
+                        <div className="text-xs text-gray-500 text-center mt-4">点击卡片查看答案</div>
+                      </div>
+                      
+                      {/* 卡片背面 - 答案 */}
+                      <div className="flashcard-face flashcard-back">
+                        <div className="font-medium mb-2 text-center">答案：</div>
+                        <div className="text-center text-lg">{flashcards[currentCardIndex].answer}</div>
+                        <div className="text-xs text-gray-500 text-center mt-4">点击卡片返回问题</div>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg cursor-pointer">
-                    <div className="font-medium mb-1">问题：</div>
-                    <div className="text-sm">配置Java环境变量的主要目的是什么？</div>
-                    <div className="mt-3 pt-3 border-t border-blue-100 hidden">
-                      <div className="font-medium mb-1">答案：</div>
-                      <div className="text-sm">使Java命令可以在任何目录下执行，不受当前工作目录限制。</div>
-                    </div>
+                  <button 
+                    onClick={nextCard}
+                    disabled={currentCardIndex === flashcards.length - 1}
+                    className={`absolute right-0 z-10 p-2 rounded-full ${currentCardIndex === flashcards.length - 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
+                  >
+                    <FontAwesomeIcon icon={faArrowRight} />
+                  </button>
+                </div>
+                
+                <div className="flex justify-center mt-6">
+                  <div className="flex space-x-1">
+                    {flashcards.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentCardIndex(index);
+                          setIsFlipped(false);
+                        }}
+                        className={`w-2 h-2 rounded-full ${index === currentCardIndex ? 'bg-blue-500' : 'bg-gray-300'}`}
+                        aria-label={`Card ${index + 1}`}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>

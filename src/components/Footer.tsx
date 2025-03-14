@@ -14,15 +14,15 @@ const Footer: React.FC = () => {
               新一代AI辅助实践学习平台，让学习更高效、更有趣。
             </p>
             <div className="flex space-x-4">
-              <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
+              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                 <FontAwesomeIcon icon={faGithub} size="lg" />
-              </button>
-              <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
+              </a>
+              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                 <FontAwesomeIcon icon={faWeibo} size="lg" />
-              </button>
-              <button className="text-gray-300 hover:text-white transition-colors bg-transparent border-0 p-0 cursor-pointer">
+              </a>
+              <a href="javascript:void(0)" className="text-gray-300 hover:text-white transition-colors">
                 <FontAwesomeIcon icon={faWeixin} size="lg" />
-              </button>
+              </a>
             </div>
           </div>
           

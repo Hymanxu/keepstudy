@@ -1,0 +1,70 @@
+.flashcard-container {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 500px;
+  height: 250px;
+  margin: 0 auto;
+  position: relative;
+  cursor: pointer;
+}
+
+.flashcard {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.flashcard.flipped {
+  transform: rotateY(180deg);
+}
+
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.flashcard-front {
+  background-color: #EFF6FF;
+  border: 1px solid #DBEAFE;
+}
+
+.flashcard-back {
+  background-color: #ECFDF5;
+  border: 1px solid #D1FAE5;
+  transform: rotateY(180deg);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* 这个修复确保背面卡片的内容正向显示 */
+.rotate-y-180 .transform-style-3d > div:last-child {
+  transform: rotateY(0deg) !important;
+}
+
+.rotate-y-180 .transform-style-3d > div:first-child {
+  transform: rotateY(180deg) !important;
+} 
