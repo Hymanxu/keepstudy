@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faStar, faUserFriends, faClock, faTag, faGraduationCap, faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faStar, faUserFriends, faClock, faTag, faGraduationCap, faBookOpen, faShoppingCart, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useCartContext } from '../contexts/CartContext';
 
 // 导入模拟课程数据（实际应用中应从API获取）
 const COURSES = [
@@ -207,9 +208,60 @@ const COURSES = [
 const CourseDetailPage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
+  const { addToCart, isInCart } = useCartContext();
+  
+  // 添加状态管理购买操作
+  const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [isInCartState, setIsInCartState] = useState(false);
   
   // 查找对应ID的课程
   const course = COURSES.find(c => c.id === Number(courseId));
+  
+  // 检查课程是否在购物车中
+  useEffect(() => {
+    if (course) {
+      setIsInCartState(isInCart(course.id));
+    }
+  }, [course, isInCart]);
+  
+  // 添加到购物车
+  const handleAddToCart = () => {
+    if (course) {
+      const added = addToCart({
+        id: course.id,
+        title: course.title,
+        price: course.price,
+        originalPrice: course.originalPrice,
+        image: course.image
+      });
+      
+      if (added) {
+        setIsInCartState(true);
+        // 显示添加成功消息
+        setTimeout(() => {
+          alert('课程已成功添加到购物车！');
+        }, 300);
+      }
+    }
+  };
+  
+  // 立即购买
+  const handleBuyNow = () => {
+    if (course) {
+      // 先添加到购物车
+      const added = addToCart({
+        id: course.id,
+        title: course.title,
+        price: course.price,
+        originalPrice: course.originalPrice,
+        image: course.image
+      });
+      
+      // 无论是否添加成功，都直接跳转到结账页面
+      navigate('/checkout');
+    }
+  };
   
   // 如果课程不存在，显示错误信息
   if (!course) {
@@ -312,14 +364,43 @@ const CourseDetailPage: React.FC = () => {
                 ))}
               </div>
               
-              <div className="mb-6">
-                <div className="text-3xl font-bold text-primary">{course.price}</div>
-                <div className="text-gray-500 line-through">{course.originalPrice}</div>
+              <div className="flex items-end gap-4 mb-6">
+                <div>
+                  <span className="text-3xl font-bold text-primary">{course.price}</span>
+                  {course.originalPrice && (
+                    <span className="ml-2 text-gray-400 line-through">{course.originalPrice}</span>
+                  )}
+                </div>
+                <div className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">
+                  限时优惠
+                </div>
               </div>
               
+              {/* 购买和购物车按钮 */}
               <div className="flex gap-4">
-                <button className="btn btn-primary px-8">立即购买</button>
-                <button className="btn btn-outline px-8">加入购物车</button>
+                <button 
+                  className="btn btn-primary flex-1 py-3"
+                  onClick={handleBuyNow}
+                >
+                  立即购买
+                </button>
+                <button 
+                  className={`btn flex-1 py-3 flex items-center justify-center ${isInCartState ? 'btn-success' : 'btn-outline'}`}
+                  onClick={handleAddToCart}
+                  disabled={isInCartState}
+                >
+                  {isInCartState ? (
+                    <>
+                      <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                      已加入购物车
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+                      加入购物车
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>

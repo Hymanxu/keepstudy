@@ -1,32 +1,201 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faLaptopCode, faUsers, faRobot, faBrain, faBook, faCode, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
+// 彩带动画组件
+const Confetti = ({ x, y }: { x: number; y: number }) => {
+  const colors = ['#FFC700', '#FF0058', '#2C61F6', '#29C5F6', '#7DE2D1', '#F7BDD1', '#FF6B6B', '#9F8EF2'];
+  const [particles, setParticles] = useState<Array<{
+    id: number;
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    width: number;
+    height: number;
+    color: string;
+    rotation: number;
+    rotationSpeed: number;
+    opacity: number;
+  }>>([]);
+  
+  useEffect(() => {
+    const newParticles = [];
+    // 生成20-30个彩带片段
+    const particleCount = Math.floor(Math.random() * 11) + 20;
+    
+    for (let i = 0; i < particleCount; i++) {
+      // 随机颜色
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      // 随机初始方向和速度
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 1 + Math.random() * 3;
+      
+      // 彩带大小 - 细长形状
+      const width = 3 + Math.random() * 7;
+      const height = 10 + Math.random() * 15;
+      
+      // 初始旋转角度和旋转速度
+      const rotation = Math.random() * 360;
+      const rotationSpeed = -1 + Math.random() * 2;
+      
+      newParticles.push({
+        id: i,
+        x: 0,
+        y: 0,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed * 0.6, // 竖直方向的速度稍小，让彩带在空中飘得久一些
+        width,
+        height,
+        color,
+        rotation,
+        rotationSpeed,
+        opacity: 0.8 + Math.random() * 0.2
+      });
+    }
+    
+    setParticles(newParticles);
+    
+    // 彩带动画
+    const animationInterval = setInterval(() => {
+      setParticles(prev => 
+        prev.map(p => ({
+          ...p,
+          x: p.x + p.vx,
+          y: p.y + p.vy,
+          vy: p.vy + 0.07, // 添加重力，但要比烟花小些
+          vx: p.vx * 0.99, // 轻微的空气阻力
+          rotation: p.rotation + p.rotationSpeed,
+          opacity: p.opacity - 0.005 // 缓慢消失
+        })).filter(p => p.opacity > 0)
+      );
+    }, 20);
+    
+    // 3秒后清除动画
+    const cleanupTimeout = setTimeout(() => {
+      clearInterval(animationInterval);
+      setParticles([]);
+    }, 3000);
+    
+    return () => {
+      clearInterval(animationInterval);
+      clearTimeout(cleanupTimeout);
+    };
+  }, [x, y]);
+  
+  return (
+    <div style={{ position: 'absolute', left: x, top: y, pointerEvents: 'none' }}>
+      {particles.map(p => (
+        <div 
+          key={p.id}
+          style={{
+            position: 'absolute',
+            left: p.x,
+            top: p.y,
+            width: `${p.width}px`,
+            height: `${p.height}px`,
+            backgroundColor: p.color,
+            opacity: p.opacity,
+            transform: `rotate(${p.rotation}deg)`,
+            borderRadius: '1px',
+            zIndex: 10,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 const HomePage: React.FC = () => {
+  const [confetti, setConfetti] = useState<Array<{id: number; x: number; y: number}>>([]);
+  const [nextId, setNextId] = useState(0);
+  const navigate = useNavigate();
+  
+  // 检查用户是否登录
+  const isLoggedIn = (() => {
+    const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser).isLoggedIn : false;
+  })();
+  
+  // 创建彩带的函数
+  const createConfetti = () => {
+    // 获取Hero区域的文字部分
+    const heroSection = document.querySelector('.hero-text-area');
+    if (!heroSection) return;
+    
+    const rect = heroSection.getBoundingClientRect();
+    // 在文字区域周围的随机位置生成彩带
+    const x = rect.left + Math.random() * rect.width;
+    const y = rect.top + Math.random() * rect.height;
+    
+    setConfetti(prev => [...prev, { id: nextId, x: x - rect.left, y: y - rect.top }]);
+    setNextId(prev => prev + 1);
+    
+    // 3秒后移除彩带
+    setTimeout(() => {
+      setConfetti(prev => prev.filter(c => c.id !== nextId - 1));
+    }, 3000);
+  };
+  
+  // 处理按钮hover事件
+  const handleButtonHover = () => {
+    createConfetti();
+  };
+  
+  // 处理头像hover事件
+  const handleAvatarHover = () => {
+    createConfetti();
+  };
+  
+  // 处理"开始使用"按钮点击
+  const handleStartButtonClick = (e: React.MouseEvent) => {
+    if (isLoggedIn) {
+      e.preventDefault(); // 阻止默认的链接行为
+      navigate('/workspace'); // 导航到工作台
+    }
+  };
+  
   return (
     <div className="bg-white pt-[72px]">
       {/* Hero Section */}
       <section className="py-16 md:py-24 relative overflow-hidden">
-        <div className="container mx-auto max-w-[1100px] px-4">
-          <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="container mx-auto max-w-[1100px] px-4 relative">
+          {confetti.map(c => (
+            <Confetti key={c.id} x={c.x} y={c.y} />
+          ))}
+          
+          <div className="text-center max-w-3xl mx-auto mb-12 hero-text-area">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">保持学习 无限进步</h1>
             <p className="text-lg text-gray-600 mb-8">
               利用AI技术辅助学习，提高效率，轻松掌握编程技能
             </p>
             <div className="flex justify-center space-x-4">
-            <Link to="/courses" className="btn btn-secondary rounded-full px-6 py-3">
+              <Link 
+                to="/courses" 
+                className="btn btn-secondary rounded-full px-6 py-3"
+                onMouseEnter={handleButtonHover}
+              >
                 发现课程
               </Link>
-              <Link to="/register" className="btn btn-primary rounded-full px-6 py-3">
-                开始使用
+              <Link 
+                to={isLoggedIn ? "#" : "/register"} 
+                className="btn btn-primary rounded-full px-6 py-3"
+                onMouseEnter={handleButtonHover}
+                onClick={handleStartButtonClick}
+              >
+                {isLoggedIn ? "进入工作台" : "开始使用"}
               </Link>
             </div>
           </div>
           
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-0">
             <div className="relative group">
-              <div className="w-11 h-16 flex items-center justify-center cursor-pointer">
+              <div 
+                className="w-11 h-16 flex items-center justify-center cursor-pointer"
+                onMouseEnter={handleAvatarHover}
+              >
                 <img 
                   src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" 
                   alt="学习者头像" 
@@ -38,7 +207,10 @@ const HomePage: React.FC = () => {
               </div>
             </div>
             <div className="relative group">
-              <div className="w-11 h-16 flex items-center justify-center cursor-pointer">
+              <div 
+                className="w-11 h-16 flex items-center justify-center cursor-pointer"
+                onMouseEnter={handleAvatarHover}
+              >
                 <img 
                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" 
                   alt="学习者头像" 
@@ -50,7 +222,10 @@ const HomePage: React.FC = () => {
               </div>
             </div>
             <div className="relative group">
-              <div className="w-11 h-16 flex items-center justify-center cursor-pointer">
+              <div 
+                className="w-11 h-16 flex items-center justify-center cursor-pointer"
+                onMouseEnter={handleAvatarHover}
+              >
                 <img 
                   src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" 
                   alt="学习者头像" 
@@ -62,7 +237,10 @@ const HomePage: React.FC = () => {
               </div>
             </div>
             <div className="relative group">
-              <div className="w-11 h-16 flex items-center justify-center cursor-pointer">
+              <div 
+                className="w-11 h-16 flex items-center justify-center cursor-pointer"
+                onMouseEnter={handleAvatarHover}
+              >
                 <img 
                   src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" 
                   alt="学习者头像" 
@@ -74,7 +252,10 @@ const HomePage: React.FC = () => {
               </div>
             </div>
             <div className="relative group">
-              <div className="w-11 h-16 flex items-center justify-center cursor-pointer">
+              <div 
+                className="w-11 h-16 flex items-center justify-center cursor-pointer"
+                onMouseEnter={handleAvatarHover}
+              >
                 <img 
                   src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" 
                   alt="学习者头像" 

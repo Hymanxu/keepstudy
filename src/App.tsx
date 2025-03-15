@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 
 // Pages
@@ -10,10 +10,17 @@ import CommunityPage from './pages/CommunityPage';
 import WorkspaceRouter from './pages/WorkspaceRouter';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrdersPage from './pages/OrdersPage';
+import OrderDetailPage from './pages/OrderDetailPage';
 
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
+// Context
+import { CartProvider } from './contexts/CartContext';
 
 // Layout Component types
 type AppLayoutProps = {
@@ -25,9 +32,20 @@ type AppLayoutProps = {
 // Layout Component with conditional navbar/footer
 const AppLayout = ({ isLoggedIn, handleLogin, handleLogout }: AppLayoutProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const hiddenNavbarPaths = ["/community", "/workspace", "/login", "/register"];
   const shouldShowNavbar = !hiddenNavbarPaths.some(path => location.pathname.startsWith(path));
   const shouldShowFooter = shouldShowNavbar; // 同样的逻辑应用于页脚
+  
+  // 检查登录状态，如果用户访问需要登录的页面但未登录，重定向到登录页面
+  useEffect(() => {
+    const protectedPaths = ["/workspace", "/cart", "/checkout", "/orders"];
+    const isProtectedRoute = protectedPaths.some(path => location.pathname.startsWith(path));
+    
+    if (isProtectedRoute && !isLoggedIn) {
+      navigate("/login");
+    }
+  }, [location.pathname, isLoggedIn, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -41,6 +59,10 @@ const AppLayout = ({ isLoggedIn, handleLogin, handleLogout }: AppLayoutProps) =>
           <Route path="/workspace/*" element={<WorkspaceRouter />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/register" element={<RegisterPage onRegister={handleLogin} />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/orders/:orderId" element={<OrderDetailPage />} />
         </Routes>
       </main>
       {shouldShowFooter && <Footer />}
@@ -49,17 +71,31 @@ const AppLayout = ({ isLoggedIn, handleLogin, handleLogout }: AppLayoutProps) =>
 };
 
 function App() {
-  // State to manage user authentication (simplified for prototype)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // 从本地存储中检查登录状态
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser).isLoggedIn : false;
+  });
 
-  // Mock login/logout functions
-  const handleLogin = () => setIsLoggedIn(true);
-  const handleLogout = () => setIsLoggedIn(false);
+  // 处理登录
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+  
+  // 处理登出
+  const handleLogout = () => {
+    // 清除本地存储中的用户数据
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
+    setIsLoggedIn(false);
+  };
 
   return (
-    <Router>
-      <AppLayout isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} />
-    </Router>
+    <CartProvider>
+      <Router>
+        <AppLayout isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} />
+      </Router>
+    </CartProvider>
   );
 }
 

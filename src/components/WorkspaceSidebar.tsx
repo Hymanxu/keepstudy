@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlus, faHistory, faCode, faChevronRight,
-  faBook, faComments, faUser, faQuestionCircle, faTimes
+  faBook, faComments, faUser, faQuestionCircle, faTimes, faLaptopCode
 } from '@fortawesome/free-solid-svg-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 
@@ -109,14 +109,27 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ activePath }) => {
           <h3 className="text-gray-500 text-sm font-medium mb-3 px-3">学习计划</h3>
           <div className="space-y-1">
             <Link 
-              to="/workspace/course/java" 
-              className={`flex items-center p-3 rounded-lg ${isCourseMode ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-100 text-gray-700'}`}
+              to="/workspace/plan/1" 
+              className={`flex items-center p-3 rounded-lg ${currentPath.includes('/plan/1') ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-100 text-gray-700'}`}
             >
               <div className="flex items-center space-x-2">
                 <FontAwesomeIcon icon={faCode} className="text-blue-500" />
                 <span>Java 开发工程师</span>
               </div>
-              <FontAwesomeIcon icon={faChevronRight} className="text-gray-400 ml-auto text-xs" />
+              <div className="ml-auto text-xs text-gray-500">35%</div>
+              <FontAwesomeIcon icon={faChevronRight} className="text-gray-400 ml-2 text-xs" />
+            </Link>
+            
+            <Link 
+              to="/workspace/plan/2" 
+              className={`flex items-center p-3 rounded-lg ${currentPath.includes('/plan/2') ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-100 text-gray-700'}`}
+            >
+              <div className="flex items-center space-x-2">
+                <FontAwesomeIcon icon={faLaptopCode} className="text-purple-500" />
+                <span>Web 前端开发</span>
+              </div>
+              <div className="ml-auto text-xs text-gray-500">68%</div>
+              <FontAwesomeIcon icon={faChevronRight} className="text-gray-400 ml-2 text-xs" />
             </Link>
           </div>
           <div className="mt-2 px-3">

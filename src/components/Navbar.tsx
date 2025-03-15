@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faTimes, faUser, faBook, faComment, faLaptopCode, faSignOutAlt, faCog, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faTimes, faUser, faBook, faComment, faLaptopCode, faSignOutAlt, faCog, faUserCircle, faShoppingCart, faFileInvoice, faStore, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { useCartContext } from '../contexts/CartContext';
 
 interface NavbarProps {
   isLoggedIn: boolean;
@@ -9,10 +10,13 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
+  const { cartItems } = useCartContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isCartDropdownOpen, setIsCartDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const cartDropdownRef = useRef<HTMLDivElement>(null);
 
   // 监听滚动事件，控制navbar透明度
   useEffect(() => {
@@ -31,6 +35,9 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsProfileDropdownOpen(false);
       }
+      if (cartDropdownRef.current && !cartDropdownRef.current.contains(event.target as Node)) {
+        setIsCartDropdownOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -45,6 +52,10 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
 
   const toggleProfileDropdown = () => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
+  const toggleCartDropdown = () => {
+    setIsCartDropdownOpen(!isCartDropdownOpen);
   };
 
   return (
@@ -68,6 +79,90 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
             >
               学习工作台
             </Link>
+          )}
+          
+          {isLoggedIn && (
+            <div className="relative" ref={cartDropdownRef}>
+              <div 
+                className="flex items-center cursor-pointer hover:opacity-80 transition-opacity" 
+                onClick={toggleCartDropdown}
+                onMouseEnter={() => setIsCartDropdownOpen(true)}
+              >
+                <div className="relative">
+                  <FontAwesomeIcon icon={faShoppingCart} className="text-gray-600 text-xl" />
+                  {cartItems.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                      {cartItems.length}
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              {isCartDropdownOpen && (
+                <div 
+                  className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg overflow-hidden z-10 border border-gray-200"
+                  onMouseLeave={() => setIsCartDropdownOpen(false)}
+                >
+                  <div className="py-2">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <h3 className="font-medium">购物车</h3>
+                    </div>
+                    
+                    {cartItems.length > 0 ? (
+                      <>
+                        <div className="max-h-64 overflow-y-auto">
+                          {cartItems.map(item => (
+                            <div key={item.id} className="p-3 border-b border-gray-100 hover:bg-gray-50">
+                              <div className="flex">
+                                <img 
+                                  src={item.image} 
+                                  alt={item.title} 
+                                  className="w-12 h-12 object-cover rounded"
+                                />
+                                <div className="ml-3 flex-1">
+                                  <h4 className="text-sm font-medium line-clamp-1">{item.title}</h4>
+                                  <p className="text-primary text-sm font-medium">{item.price}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="p-3 border-t border-gray-100 bg-gray-50">
+                          <div className="flex justify-between items-center mb-3">
+                            <span className="text-sm text-gray-600">共 {cartItems.length} 门课程</span>
+                            <Link to="/cart" className="text-red-500 text-sm hover:text-red-600">
+                              管理购物车
+                            </Link>
+                          </div>
+                          <Link 
+                            to="/checkout" 
+                            className="block w-full py-2 bg-primary text-white text-center rounded-md hover:bg-primary/90 transition-colors"
+                            onClick={() => setIsCartDropdownOpen(false)}
+                          >
+                            去结算
+                          </Link>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="py-8 text-center">
+                        <div className="text-gray-400 mb-2">
+                          <FontAwesomeIcon icon={faShoppingCart} size="2x" />
+                        </div>
+                        <p className="text-gray-500 mb-4">购物车还是空的</p>
+                        <Link 
+                          to="/courses" 
+                          className="text-primary hover:text-primary/90"
+                          onClick={() => setIsCartDropdownOpen(false)}
+                        >
+                          去选课
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
           
           {isLoggedIn ? (
@@ -98,6 +193,22 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
                     >
                       <FontAwesomeIcon icon={faUserCircle} className="mr-2 text-gray-500" />
                       个人资料
+                    </Link>
+                    <Link 
+                      to="/orders" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center"
+                      onClick={() => setIsProfileDropdownOpen(false)}
+                    >
+                      <FontAwesomeIcon icon={faFileInvoice} className="mr-2 text-gray-500" />
+                      我的订单
+                    </Link>
+                    <Link 
+                      to="/favorites" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center"
+                      onClick={() => setIsProfileDropdownOpen(false)}
+                    >
+                      <FontAwesomeIcon icon={faHeart} className="mr-2 text-gray-500" />
+                      我的收藏
                     </Link>
                     <Link 
                       to="/settings" 
@@ -168,10 +279,25 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
               交流社区
             </Link>
             {isLoggedIn && (
-              <Link to="/workspace" className="nav-link-mobile bg-blue-50" onClick={toggleMenu}>
-                <FontAwesomeIcon icon={faLaptopCode} className="mr-2 text-blue-500" />
-                学习工作台
-              </Link>
+              <>
+                <Link to="/workspace" className="nav-link-mobile bg-blue-50" onClick={toggleMenu}>
+                  <FontAwesomeIcon icon={faLaptopCode} className="mr-2 text-blue-500" />
+                  学习工作台
+                </Link>
+                <Link to="/cart" className="nav-link-mobile" onClick={toggleMenu}>
+                  <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+                  购物车
+                  {cartItems.length > 0 && (
+                    <span className="ml-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 inline-flex items-center justify-center">
+                      {cartItems.length}
+                    </span>
+                  )}
+                </Link>
+                <Link to="/orders" className="nav-link-mobile" onClick={toggleMenu}>
+                  <FontAwesomeIcon icon={faFileInvoice} className="mr-2" />
+                  我的订单
+                </Link>
+              </>
             )}
             
             {isLoggedIn ? (

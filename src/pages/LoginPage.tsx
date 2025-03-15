@@ -25,11 +25,18 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       return;
     }
     
-    // For demo purposes, accept any login
+    // 保存登录状态到本地存储
+    if (rememberMe) {
+      localStorage.setItem('user', JSON.stringify({ email, isLoggedIn: true }));
+    } else {
+      sessionStorage.setItem('user', JSON.stringify({ email, isLoggedIn: true }));
+    }
+    
+    // 调用登录回调
     onLogin();
     
-    // Redirect to homepage after successful login
-    navigate('/');
+    // 重定向到工作台页面而不是首页
+    navigate('/workspace');
     
     // In a real application, you would make an API call for authentication
     // Example:
@@ -37,7 +44,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     //   const response = await apiClient.post('/login', { email, password });
     //   if (response.success) {
     //     onLogin();
-    //     navigate('/');
+    //     localStorage/sessionStorage.setItem('user', JSON.stringify(response.user));
+    //     navigate('/workspace');
     //   } else {
     //     setErrorMessage(response.message);
     //   }

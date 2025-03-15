@@ -21,7 +21,9 @@ import {
   faCompressAlt,
   faExpandAlt,
   faClock,
-  faSitemap
+  faSitemap,
+  faStar,
+  faTag
 } from '@fortawesome/free-solid-svg-icons';
 import WorkspaceSidebar from '../components/WorkspaceSidebar';
 import '../styles/FlashCard.css';
@@ -140,6 +142,11 @@ const CourseWorkspacePage: React.FC = () => {
       // 无论当前是否在答案状态，都直接展示新卡片的问题面
       setIsFlipped(false);
     }
+  };
+
+  // 处理课程卡片点击
+  const handleCourseClick = (courseId: number) => {
+    navigate(`/courses/${courseId}`);
   };
 
   return (

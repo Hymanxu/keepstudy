@@ -105,6 +105,16 @@ const DefaultWorkspacePage: React.FC = () => {
     setHoverInfo(prev => ({...prev, show: false}));
   };
 
+  // 处理计划卡片点击
+  const handlePlanClick = (planId: number) => {
+    navigate(`/workspace/plan/${planId}`);
+  };
+
+  // 处理课程卡片点击，导航到课程详情页
+  const handleCourseClick = (courseId: number) => {
+    navigate(`/courses/${courseId}`);
+  };
+
   return (
     <div className="flex h-screen bg-white overflow-hidden">
       {/* */}
@@ -263,7 +273,10 @@ const DefaultWorkspacePage: React.FC = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer">
+              <div 
+                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handlePlanClick(1)}
+              >
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-blue-100 rounded-md flex items-center justify-center mr-3">
                     <FontAwesomeIcon icon={faCode} className="text-blue-600" />
@@ -276,7 +289,10 @@ const DefaultWorkspacePage: React.FC = () => {
                 </div>
               </div>
               
-              <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer">
+              <div 
+                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handlePlanClick(2)}
+              >
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-purple-100 rounded-md flex items-center justify-center mr-3">
                     <FontAwesomeIcon icon={faLaptopCode} className="text-purple-600" />
@@ -311,7 +327,10 @@ const DefaultWorkspacePage: React.FC = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* 课程卡片 */}
-              <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <div 
+                className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handleCourseClick(1)}
+              >
                 <div className="relative h-40 overflow-hidden">
                   <img 
                     src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80" 
@@ -347,7 +366,10 @@ const DefaultWorkspacePage: React.FC = () => {
                 </div>
               </div>
               
-              <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <div 
+                className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handleCourseClick(2)}
+              >
                 <div className="relative h-40 overflow-hidden">
                   <img 
                     src="https://images.unsplash.com/photo-1507146153580-69a1fe6d8aa1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80" 
@@ -383,7 +405,10 @@ const DefaultWorkspacePage: React.FC = () => {
                 </div>
               </div>
               
-              <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <div 
+                className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handleCourseClick(3)}
+              >
                 <div className="relative h-40 overflow-hidden">
                   <img 
                     src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80" 
