@@ -14,6 +14,11 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
+import AIAssessment from './pages/AIAssessment';
+import OJAssessment from './pages/OJAssessment';
+import ProjectAssessment from './pages/ProjectAssessment';
+import InterviewAssessment from './pages/InterviewAssessment';
+import AssessmentStart from './pages/AssessmentStart';
 
 // Components
 import Navbar from './components/Navbar';
@@ -63,6 +68,11 @@ const AppLayout = ({ isLoggedIn, handleLogin, handleLogout }: AppLayoutProps) =>
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/orders/:orderId" element={<OrderDetailPage />} />
+          <Route path="/ai-assessment" element={<AIAssessment />} />
+          <Route path="/ai-assessment/oj" element={<OJAssessment />} />
+          <Route path="/ai-assessment/project" element={<ProjectAssessment />} />
+          <Route path="/ai-assessment/interview" element={<InterviewAssessment />} />
+          <Route path="/ai-assessment/start" element={<AssessmentStart />} />
         </Routes>
       </main>
       {shouldShowFooter && <Footer />}

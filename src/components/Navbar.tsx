@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faTimes, faUser, faBook, faComment, faLaptopCode, faSignOutAlt, faCog, faUserCircle, faShoppingCart, faFileInvoice, faStore, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faTimes, faUser, faBook, faComment, faLaptopCode, faSignOutAlt, faCog, faUserCircle, faShoppingCart, faFileInvoice, faStore, faHeart, faRobot } from '@fortawesome/free-solid-svg-icons';
 import { useCartContext } from '../contexts/CartContext';
 
 interface NavbarProps {
@@ -71,6 +71,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
         <div className="hidden md:flex items-center space-x-8">
           <Link to="/" className="nav-link">首页</Link>
           <Link to="/courses" className="nav-link">课程广场</Link>
+          <Link to="/ai-assessment" className="nav-link">AI测评</Link>
           <Link to="/community" className="nav-link">交流社区</Link>
           {isLoggedIn && (
             <Link 
@@ -273,6 +274,10 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
             <Link to="/courses" className="nav-link-mobile" onClick={toggleMenu}>
               <FontAwesomeIcon icon={faBook} className="mr-2" />
               课程广场
+            </Link>
+            <Link to="/ai-assessment" className="nav-link-mobile" onClick={toggleMenu}>
+              <FontAwesomeIcon icon={faRobot} className="mr-2" />
+              AI测评
             </Link>
             <Link to="/community" className="nav-link-mobile" onClick={toggleMenu}>
               <FontAwesomeIcon icon={faComment} className="mr-2" />
